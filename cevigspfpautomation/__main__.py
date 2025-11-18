@@ -33,6 +33,8 @@ def main():
     secret = os.environ["KEGSCRAPER_SECRET"]
 
     pfp_dir = Path.cwd() / "pfps"
+ 
+    assert pfp_dir.exists(), f"No `pfps` directory in {Path.cwd()}"
     pfps = next(pfp_dir.walk())[2]  # root, dirs, files (we choose files)
 
     print(f"Found {pfps=}")

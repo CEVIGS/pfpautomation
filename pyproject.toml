@@ -1,19 +1,13 @@
 [project]
 name = "cevigspfpautomation"
-authors = [
-  {name = "BigPotatoPizzaHey"}
-]
+authors = [{ name = "BigPotatoPizzaHey" }]
 
 description = ""
 readme = "README.md"
 license = "GPL-3.0-only"
 dynamic = ["version"]
-requires-python = ">= 3.13"
-dependencies = [
-    "kegscraper",
-    "playwright",
-    "python-slugify"
-]
+requires-python = ">= 3.12"
+dependencies = ["kegscraper", "playwright", "python-slugify"]
 [project.scripts]
 cvpfp = "cevigspfpautomation.__main__:main"
 
@@ -29,3 +23,4 @@ path = "cevigspfpautomation/__about__.py"
 
 [tool.hatch.build.targets.wheel]
 packages = ["cevigspfpautomation"]
+
