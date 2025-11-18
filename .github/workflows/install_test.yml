@@ -1,0 +1,20 @@
+name: install test
+on:
+  workflow_dispatch:
+  
+permissions:
+  contents: read
+
+jobs:
+  pfp:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v5.0.0
+      - name: setup python
+        uses: actions/setup-python@v6.0.0
+
+      - name: install deps
+        run: |
+          pip install git+https://github.com/CEVIGS/pfpautomation.git
+          
