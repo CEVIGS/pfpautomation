@@ -32,7 +32,7 @@ def main():
     username = os.environ["KEGSCRAPER_USERNAME"]
     secret = os.environ["KEGSCRAPER_SECRET"]
 
-    pfp_dir = Path(__file__).parent / "pfps"
+    pfp_dir = Path.cwd().parent / "pfps"
     pfps = next(pfp_dir.walk())[2]  # root, dirs, files (we choose files)
 
     print(f"Found {pfps=}")
