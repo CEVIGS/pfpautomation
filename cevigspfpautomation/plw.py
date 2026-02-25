@@ -142,6 +142,7 @@ def inr(email: str, password: str, fp: str, *, page: Page, save_results: bool):
     file_chooser = fc_info.value
     file_chooser.set_files(fp)
     
+    time.sleep(5)
     fui_btn = page.locator("button[type=button].fui-Button:has-text(\"Save\")")
     try:
         fui_btn.wait_for()
