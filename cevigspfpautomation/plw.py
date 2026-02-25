@@ -91,7 +91,14 @@ def inr(email: str, password: str, fp: str, *, page: Page, save_results: bool):
 
     if page.url.startswith("https://login.microsoftonline.com/common/oauth2/v2.0/authorize"):
         table = page.wait_for_selector("div[class=table tole=button]")
-        table.query_selector("div[class=table-row]").click()
+        if table is None:
+            ss("could not find table")
+            raise RuntimeError()
+        tr = table.query_selector("div[class=table-row]")
+        if tr is None:
+            ss("could not find table row")
+            raise RuntimeError()
+        tr.click()
 
     try:
         ss("Waiting for https://outlook.office365.com/mail/")
@@ -114,42 +121,33 @@ def inr(email: str, password: str, fp: str, *, page: Page, save_results: bool):
 
     time.sleep(10)
 
-    img_btn = page.locator("div[role='presentation'].ms-Persona-imageArea")
+    ss("Finding the button input")
+    img_btn = page.locator("button[aria-label=\"Change your profile photo\"]")
     try:
         img_btn.wait_for()
     except pw_errors.TimeoutError:
         ss("Couldn't locate persona image area")
 
-    # maybe change this to a locator: https://playwright.dev/python/docs/other-locators
-    div = page.locator('div[role=heading]:has-text("Give feedback to Microsoft")')
-    try:
-        div.wait_for(timeout=10_000)
-    except pw_errors.TimeoutError as e:
-        warnings.warn(f"{e.__class__}: {e}")
-        div = None
-
-    if div:
-        frame_parent = div.locator("../..")
-        cancel_btn = frame_parent.locator('button:not([aria-disabled]):has-text("Cancel")')
-
-        cancel_btn.click()
-
-    img = img_btn.locator("img[src][alt='Profile photo']")
-    # try:
-    img.wait_for()
-    # except pw_errors.TimeoutError as e:
-    #     warnings.warn(f"Ignored: {format_exc(e)}")
-
     img_btn.click()
-    change_photo_btn = page.wait_for_selector("span[role=presentation].CloudUpload")
+    ss("Looking for new change button")
+    fui_btn = page.locator("button[type=button].fui-Button:has-text(\"Change\")")
+    try:
+        fui_btn.wait_for()
+    except pw_errors.TimeoutError:
+        ss("Couldn't locate change button")
 
     with page.expect_file_chooser() as fc_info:
-        change_photo_btn.click()
+        fui_btn.click()
 
     file_chooser = fc_info.value
     file_chooser.set_files(fp)
-
-    page.wait_for_selector("button[aria-label=Save]").click()
+    
+    fui_btn = page.locator("button[type=button].fui-Button:has-text(\"Save\")")
+    try:
+        fui_btn.wait_for()
+    except pw_errors.TimeoutError:
+        ss("Couldn't locate save button")
+    fui_btn.click()
 
     time.sleep(5)
 
