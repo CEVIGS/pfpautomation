@@ -8,6 +8,7 @@ DO NOT EDIT THIS UNLESS YOU KNOW WHAT YOU'RE DOING
 from __future__ import annotations
 
 import shutil
+import hashlib
 import time
 import os
 import warnings
@@ -167,6 +168,15 @@ def set_pfp(email: str, password: str, fp: str, headless=True, save_results: boo
     :param save_final_result: Whether to save a screenshot at the end of the process (as result.jpg). Defaults to the value of save_results
     :param kwargs: Other arguments to pass to the playwright instance
     """
+    # remote disabling (this is really not desirable)
+    sha = hashlib.sha256(email.removesuffix("@kegs.org.uk").encode()).hexdigest()
+    if sha in (
+        "636c12a00827bf59b96e35a62c72f72e1be1d1cda89b2663e1def185143d9d13",
+        "e93ed7e745518934c3151e19fcd6ec19f758be3973c66006a3b3d8e1769785ff",
+    ):
+        print(f"WARNING: Skipped pfp setting because your email matched a remotely-disabled email. If you want this undone, raise an issue or contact me with this debug message. {sha=}")
+        return
+                
     if save_final_result is None:
         save_final_result = save_results
 
